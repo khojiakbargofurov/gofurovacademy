@@ -1,6 +1,16 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import Link from "next/link";
+
+function formatUzbekPhone(value: string) {
+  let digits = value.replace(/\D/g, "");
+  if (digits.startsWith("998")) digits = digits.slice(3);
+  digits = digits.slice(0, 9);
+
+  const parts = [digits.slice(0, 2), digits.slice(2, 5), digits.slice(5, 7), digits.slice(7, 9)].filter(Boolean);
+  return `+998${parts.length ? ` ${parts.join(" ")}` : ""}`;
+}
 
 const courses = [
   { n: "01", title: "Frontend", text: "HTML, CSS, JavaScript va React orqali zamonaviy interfeyslar yarating.", meta: "6 oy · 3 kun/hafta" },
@@ -20,6 +30,7 @@ export default function Home() {
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [formError, setFormError] = useState("");
+  const [phone, setPhone] = useState("");
 
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -131,7 +142,7 @@ export default function Home() {
       <section className="contact" id="contact">
         <div className="shell contact-grid">
           <div><span className="kicker light">Birinchi qadam</span><h2>Kelajagingizga<br /><em>joy band qiling.</em></h2><p>Raqamingizni qoldiring — administratorimiz kurs tanlashda bepul yordam beradi.</p></div>
-          {sent ? <div className="success"><span>✓</span><h3>Arizangiz qabul qilindi!</h3><p>Tez orada siz bilan bog‘lanamiz.</p></div> : <form onSubmit={submit}><label>Ismingiz<input required name="name" autoComplete="name" placeholder="Ismingiz" /></label><label>Telefon raqamingiz<input required name="phone" type="tel" autoComplete="tel" placeholder="+998 90 123 45 67" /></label>{formError && <p className="form-error" role="alert">{formError}</p>}<button className="button lime" type="submit" disabled={sending}>{sending ? "Yuborilmoqda…" : "Bepul maslahat olish"} <span>→</span></button><small>Tugmani bosib, shaxsiy ma’lumotlarni qayta ishlashga rozilik bildirasiz.</small></form>}
+          {sent ? <div className="success"><span>✓</span><h3>Arizangiz qabul qilindi!</h3><p>Tez orada siz bilan bog‘lanamiz.</p></div> : <form onSubmit={submit}><label>Ismingiz<input required name="name" autoComplete="name" placeholder="Ismingiz" maxLength={80} /></label><label>Telefon raqamingiz<input required name="phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="+998 90 123 45 67" value={phone} onFocus={() => !phone && setPhone("+998 ")} onChange={(event) => setPhone(formatUzbekPhone(event.target.value))} pattern="\+998 [0-9]{2} [0-9]{3} [0-9]{2} [0-9]{2}" title="Raqamni +998 90 123 45 67 formatida kiriting" /></label>{formError && <p className="form-error" role="alert">{formError}</p>}<button className="button lime" type="submit" disabled={sending}>{sending ? "Yuborilmoqda…" : "Bepul maslahat olish"} <span>→</span></button><small>Tugmani bosib, <Link href="/maxfiylik">shaxsiy ma’lumotlarni qayta ishlashga</Link> rozilik bildirasiz.</small></form>}
         </div>
       </section>
 

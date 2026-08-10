@@ -2,9 +2,15 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://gofurov-academy.com"),
-  title: "Gofurov Academy — Kelajak kasbini bugun boshlang",
+  metadataBase: new URL("https://gofurovacademy.vercel.app"),
+  title: {
+    default: "Gofurov Academy — Kelajak kasbini bugun boshlang",
+    template: "%s | Gofurov Academy",
+  },
   description: "Amaliyot, mentorlik va natijaga yo‘naltirilgan zamonaviy IT va dizayn kurslari.",
+  keywords: ["IT kurslari", "Frontend kursi", "Python kursi", "Grafik dizayn", "Gofurov Academy"],
+  alternates: { canonical: "/" },
+  robots: { index: true, follow: true },
   openGraph: {
     title: "Gofurov Academy — Kelajak kasbini bugun boshlang",
     description: "Amaliy IT va dizayn kurslari, mentorlik va real natija.",
