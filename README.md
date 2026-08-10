@@ -1,4 +1,17 @@
-# vinext-starter
+# Gofurov Academy
+
+Gofurov Academy uchun zamonaviy, responsive landing sahifa. Arizalar Google Sheets va Telegram botga yuboriladi.
+
+## Ishga tushirish
+
+```bash
+npm install
+npm run dev
+```
+
+Maxfiy sozlamalar uchun `.env.example` faylidan foydalaning. Bot tokeni va boshqa maxfiy qiymatlarni GitHub’ga yuklamang.
+
+## Texnik asos
 
 A clean full-stack starter running on
 [vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
