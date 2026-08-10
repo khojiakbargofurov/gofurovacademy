@@ -135,7 +135,7 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="footer"><div className="shell footer-row"><div className="brand inverse"><span className="brand-mark">G</span><span>GOFUROV<br />ACADEMY</span></div><p>Bilimdan — natijaga.</p><div><a href="#">Instagram</a><a href="#">Telegram</a><a href="#">YouTube</a></div><span>© 2026</span></div></footer>
+      <footer className="footer"><div className="shell footer-row"><div className="brand inverse"><span className="brand-mark">G</span><span>GOFUROV<br />ACADEMY</span></div><p>Bilimdan — natijaga.</p><span>© 2026</span></div></footer>
     </main>
   );
 }
