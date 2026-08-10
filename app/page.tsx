@@ -31,6 +31,12 @@ export default function Home() {
   const [sending, setSending] = useState(false);
   const [formError, setFormError] = useState("");
   const [phone, setPhone] = useState("");
+  const [selectedCourse, setSelectedCourse] = useState("");
+
+  function chooseCourse(course: string) {
+    setSelectedCourse(course);
+    document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+  }
 
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -41,7 +47,7 @@ export default function Home() {
       const response = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: form.get("name"), phone: form.get("phone") }),
+        body: JSON.stringify({ name: form.get("name"), phone: form.get("phone"), course: form.get("course") }),
       });
       if (!response.ok) throw new Error("send failed");
       setSent(true);
@@ -110,9 +116,9 @@ export default function Home() {
         </div>
         <div className="course-grid">
           {courses.map((course, i) => <article className={`course c${i + 1}`} key={course.title}>
-            <div className="course-top"><span>{course.n}</span><i>↗</i></div>
+            <div className="course-top"><span>{course.n}</span><button type="button" onClick={() => chooseCourse(course.title)} aria-label={`${course.title} kursiga yozilish`}>↗</button></div>
             <div className="course-icon" aria-hidden="true">{i === 0 ? "</>" : i === 1 ? "Py" : "✦"}</div>
-            <h3>{course.title}</h3><p>{course.text}</p><div className="course-meta">{course.meta}</div>
+            <h3>{course.title}</h3><p>{course.text}</p><div className="course-meta"><span>{course.meta}</span><button type="button" onClick={() => chooseCourse(course.title)}>Kursga yozilish</button></div>
           </article>)}
         </div>
       </section>
@@ -142,7 +148,7 @@ export default function Home() {
       <section className="contact" id="contact">
         <div className="shell contact-grid">
           <div><span className="kicker light">Birinchi qadam</span><h2>Kelajagingizga<br /><em>joy band qiling.</em></h2><p>Raqamingizni qoldiring — administratorimiz kurs tanlashda bepul yordam beradi.</p></div>
-          {sent ? <div className="success"><span>✓</span><h3>Arizangiz qabul qilindi!</h3><p>Tez orada siz bilan bog‘lanamiz.</p></div> : <form onSubmit={submit}><label>Ismingiz<input required name="name" autoComplete="name" placeholder="Ismingiz" maxLength={80} /></label><label>Telefon raqamingiz<input required name="phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="+998 90 123 45 67" value={phone} onFocus={() => !phone && setPhone("+998 ")} onChange={(event) => setPhone(formatUzbekPhone(event.target.value))} pattern="\+998 [0-9]{2} [0-9]{3} [0-9]{2} [0-9]{2}" title="Raqamni +998 90 123 45 67 formatida kiriting" /></label>{formError && <p className="form-error" role="alert">{formError}</p>}<button className="button lime" type="submit" disabled={sending}>{sending ? "Yuborilmoqda…" : "Bepul maslahat olish"} <span>→</span></button><small>Tugmani bosib, <Link href="/maxfiylik">shaxsiy ma’lumotlarni qayta ishlashga</Link> rozilik bildirasiz.</small></form>}
+          {sent ? <div className="success"><span>✓</span><h3>Arizangiz qabul qilindi!</h3><p>Tez orada siz bilan bog‘lanamiz.</p></div> : <form onSubmit={submit}><label>Ismingiz<input required name="name" autoComplete="name" placeholder="Ismingiz" maxLength={80} /></label><label>Qiziqtirgan kurs<select required name="course" value={selectedCourse} onChange={(event) => setSelectedCourse(event.target.value)}><option value="" disabled>Kursni tanlang</option>{courses.map((course) => <option key={course.title} value={course.title}>{course.title}</option>)}</select></label><label>Telefon raqamingiz<input required name="phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="+998 90 123 45 67" value={phone} onFocus={() => !phone && setPhone("+998 ")} onChange={(event) => setPhone(formatUzbekPhone(event.target.value))} pattern="\+998 [0-9]{2} [0-9]{3} [0-9]{2} [0-9]{2}" title="Raqamni +998 90 123 45 67 formatida kiriting" /></label>{formError && <p className="form-error" role="alert">{formError}</p>}<button className="button lime" type="submit" disabled={sending}>{sending ? "Yuborilmoqda…" : "Bepul maslahat olish"} <span>→</span></button><small>Tugmani bosib, <Link href="/maxfiylik">shaxsiy ma’lumotlarni qayta ishlashga</Link> rozilik bildirasiz.</small></form>}
         </div>
       </section>
 

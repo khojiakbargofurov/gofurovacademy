@@ -37,7 +37,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="uz">
-      <body>{children}</body>
+      <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "EducationalOrganization",
+              name: "Gofurov Academy",
+              url: "https://gofurovacademy.vercel.app",
+              logo: "https://gofurovacademy.vercel.app/favicon.svg",
+              description: "Amaliy IT va dizayn kurslari, mentorlik va real loyihalar.",
+              areaServed: "UZ",
+            }).replace(/</g, "\\u003c"),
+          }}
+        />
+        {children}
+      </body>
     </html>
   );
 }
