@@ -18,10 +18,27 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState(0);
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [formError, setFormError] = useState("");
 
-  function submit(e: FormEvent<HTMLFormElement>) {
+  async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setSent(true);
+    setSending(true);
+    setFormError("");
+    const form = new FormData(e.currentTarget);
+    try {
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: form.get("name"), phone: form.get("phone") }),
+      });
+      if (!response.ok) throw new Error("send failed");
+      setSent(true);
+    } catch {
+      setFormError("Arizani yuborib bo‘lmadi. Iltimos, qayta urinib ko‘ring.");
+    } finally {
+      setSending(false);
+    }
   }
 
   return (
@@ -114,7 +131,7 @@ export default function Home() {
       <section className="contact" id="contact">
         <div className="shell contact-grid">
           <div><span className="kicker light">Birinchi qadam</span><h2>Kelajagingizga<br /><em>joy band qiling.</em></h2><p>Raqamingizni qoldiring — administratorimiz kurs tanlashda bepul yordam beradi.</p></div>
-          {sent ? <div className="success"><span>✓</span><h3>Arizangiz qabul qilindi!</h3><p>Tez orada siz bilan bog‘lanamiz.</p></div> : <form onSubmit={submit}><label>Ismingiz<input required name="name" placeholder="Ismingiz" /></label><label>Telefon raqamingiz<input required name="phone" type="tel" placeholder="+998 90 123 45 67" /></label><button className="button lime" type="submit">Bepul maslahat olish <span>→</span></button><small>Tugmani bosib, shaxsiy ma’lumotlarni qayta ishlashga rozilik bildirasiz.</small></form>}
+          {sent ? <div className="success"><span>✓</span><h3>Arizangiz qabul qilindi!</h3><p>Tez orada siz bilan bog‘lanamiz.</p></div> : <form onSubmit={submit}><label>Ismingiz<input required name="name" autoComplete="name" placeholder="Ismingiz" /></label><label>Telefon raqamingiz<input required name="phone" type="tel" autoComplete="tel" placeholder="+998 90 123 45 67" /></label>{formError && <p className="form-error" role="alert">{formError}</p>}<button className="button lime" type="submit" disabled={sending}>{sending ? "Yuborilmoqda…" : "Bepul maslahat olish"} <span>→</span></button><small>Tugmani bosib, shaxsiy ma’lumotlarni qayta ishlashga rozilik bildirasiz.</small></form>}
         </div>
       </section>
 
