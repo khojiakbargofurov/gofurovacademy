@@ -32,6 +32,12 @@ const faqs = [
   ["Guruhda nechta o‘quvchi bo‘ladi?", "Sifatli mentorlik uchun guruhlar odatda 12–16 nafar o‘quvchidan tashkil qilinadi."],
 ];
 
+const quizQuestions = [
+  { question: "Qaysi ish sizga ko‘proq yoqadi?", answers: [{ label: "Sayt va ilova yaratish", course: "Frontend" }, { label: "Mantiq va avtomatlashtirish", course: "Python" }, { label: "Vizual va kreativ ishlar", course: "Grafik dizayn" }] },
+  { question: "Qaysi natijani ko‘rishni xohlaysiz?", answers: [{ label: "Ishlaydigan web interfeys", course: "Frontend" }, { label: "Ma’lumot bilan ishlaydigan tizim", course: "Python" }, { label: "Kuchli brend va dizayn", course: "Grafik dizayn" }] },
+  { question: "Kuchli tomoningiz qaysi?", answers: [{ label: "Tartib va detallarga e’tibor", course: "Frontend" }, { label: "Tahlil va muammo yechish", course: "Python" }, { label: "Tasavvur va estetik did", course: "Grafik dizayn" }] },
+];
+
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState(0);
@@ -41,10 +47,31 @@ export default function Home() {
   const [phone, setPhone] = useState("");
   const [selectedCourse, setSelectedCourse] = useState("");
   const [programCourse, setProgramCourse] = useState<(typeof courses)[number] | null>(null);
+  const [quizStep, setQuizStep] = useState(0);
+  const [quizScores, setQuizScores] = useState<Record<string, number>>({});
+  const [quizResult, setQuizResult] = useState("");
 
   function chooseCourse(course: string) {
     setSelectedCourse(course);
     document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+  }
+
+  function answerQuiz(course: string) {
+    const nextScores = { ...quizScores, [course]: (quizScores[course] ?? 0) + 1 };
+    setQuizScores(nextScores);
+    if (quizStep === quizQuestions.length - 1) {
+      const result = Object.entries(nextScores).sort((a, b) => b[1] - a[1])[0][0];
+      setQuizResult(result);
+      setSelectedCourse(result);
+    } else {
+      setQuizStep(quizStep + 1);
+    }
+  }
+
+  function resetQuiz() {
+    setQuizStep(0);
+    setQuizScores({});
+    setQuizResult("");
   }
 
   async function submit(e: FormEvent<HTMLFormElement>) {
@@ -151,6 +178,10 @@ export default function Home() {
       <section className="section shell results" id="results">
         <div className="section-head results-head"><div><span className="kicker">Bitiruvchilar</span><h2>Bilimdan —<br /><em>real natijaga.</em></h2></div><p>Quyidagi ma’lumotlar hozircha namuna sifatida joylandi. Haqiqiy bitiruvchilar ma’lumotlari tayyor bo‘lganda yangilanadi.</p></div>
         <div className="result-grid">{studentResults.map((student) => <article className="result-card" key={student.name}><div className={`result-avatar ${student.color}`}>{student.initials}</div><span className="result-course">{student.course} bitiruvchisi</span><h3>{student.name}</h3><p>{student.result}</p><strong>{student.company}</strong><div className="result-actions"><span>Portfolio · tez orada</span><span>▶ Video fikr · tez orada</span></div></article>)}</div>
+      </section>
+
+      <section className="quiz-section" id="quiz">
+        <div className="shell quiz-grid"><div className="quiz-copy"><span className="kicker light">3 ta qisqa savol</span><h2>Qaysi kurs<br /><em>sizga mos?</em></h2><p>Qiziqishlaringizni belgilang — sizga boshlash uchun eng mos yo‘nalishni tavsiya qilamiz.</p></div><div className="quiz-card">{quizResult ? <div className="quiz-result"><span>Sizga mos yo‘nalish</span><h3>{quizResult}</h3><p>Javoblaringiz asosida ushbu kurs sizning qiziqishingiz va fikrlash uslubingizga eng yaqin chiqdi.</p><button className="button lime" type="button" onClick={() => chooseCourse(quizResult)}>Bepul maslahat olish <span>→</span></button><button className="quiz-reset" type="button" onClick={resetQuiz}>Testni qayta boshlash</button></div> : <><div className="quiz-progress"><span>{quizStep + 1} / {quizQuestions.length}</span><i style={{ width: `${((quizStep + 1) / quizQuestions.length) * 100}%` }} /></div><h3>{quizQuestions[quizStep].question}</h3><div className="quiz-answers">{quizQuestions[quizStep].answers.map((answer) => <button type="button" key={answer.label} onClick={() => answerQuiz(answer.course)}><span>{answer.label}</span><b>→</b></button>)}</div></>}</div></div>
       </section>
 
       <section className="faq shell section">
