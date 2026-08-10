@@ -13,9 +13,15 @@ function formatUzbekPhone(value: string) {
 }
 
 const courses = [
-  { n: "01", title: "Frontend", text: "HTML, CSS, JavaScript va React orqali zamonaviy interfeyslar yarating.", meta: "6 oy · 3 kun/hafta" },
-  { n: "02", title: "Python", text: "Dasturlash asoslaridan real backend loyihalarigacha bo‘lgan amaliy yo‘l.", meta: "7 oy · 3 kun/hafta" },
-  { n: "03", title: "Grafik dizayn", text: "Vizual fikrlash, brending va portfolio uchun kuchli dizayn ko‘nikmalari.", meta: "5 oy · 3 kun/hafta" },
+  { n: "01", title: "Frontend", text: "HTML, CSS, JavaScript va React orqali zamonaviy interfeyslar yarating.", duration: "6 oy", schedule: "Du–Cho–Ju · 18:30", teacher: "Javohir Karimov", price: "890 000 so‘m/oy" },
+  { n: "02", title: "Python", text: "Dasturlash asoslaridan real backend loyihalarigacha bo‘lgan amaliy yo‘l.", duration: "7 oy", schedule: "Se–Pay–Sha · 19:00", teacher: "Sardor Aliyev", price: "950 000 so‘m/oy" },
+  { n: "03", title: "Grafik dizayn", text: "Vizual fikrlash, brending va portfolio uchun kuchli dizayn ko‘nikmalari.", duration: "5 oy", schedule: "Du–Cho–Ju · 15:00", teacher: "Madina Rasulova", price: "790 000 so‘m/oy" },
+];
+
+const studentResults = [
+  { initials: "AS", name: "Azizbek S.", course: "Frontend", result: "Junior Frontend Developer", company: "Uzum", color: "coral" },
+  { initials: "MN", name: "Mohinur N.", course: "Grafik dizayn", result: "Brand Designer", company: "Freelance", color: "lime" },
+  { initials: "BK", name: "Bekzod K.", course: "Python", result: "Backend intern", company: "Payme", color: "green" },
 ];
 
 const faqs = [
@@ -71,6 +77,8 @@ export default function Home() {
           <a href="#courses" onClick={() => setMenuOpen(false)}>Kurslar</a>
           <a href="#about" onClick={() => setMenuOpen(false)}>Biz haqimizda</a>
           <a href="#results" onClick={() => setMenuOpen(false)}>Natijalar</a>
+          <a href="https://t.me/gofurovacademy" target="_blank" rel="noreferrer">Telegram</a>
+          <a href="https://instagram.com/gofurovacademy" target="_blank" rel="noreferrer">Instagram</a>
           <a className="nav-cta" href="#contact" onClick={() => setMenuOpen(false)}>Bepul maslahat <span>↗</span></a>
         </nav>
       </header>
@@ -118,7 +126,9 @@ export default function Home() {
           {courses.map((course, i) => <article className={`course c${i + 1}`} key={course.title}>
             <div className="course-top"><span>{course.n}</span><button type="button" onClick={() => chooseCourse(course.title)} aria-label={`${course.title} kursiga yozilish`}>↗</button></div>
             <div className="course-icon" aria-hidden="true">{i === 0 ? "</>" : i === 1 ? "Py" : "✦"}</div>
-            <h3>{course.title}</h3><p>{course.text}</p><div className="course-meta"><span>{course.meta}</span><button type="button" onClick={() => chooseCourse(course.title)}>Kursga yozilish</button></div>
+            <h3>{course.title}</h3><p>{course.text}</p>
+            <dl className="course-details"><div><dt>Davomiyligi</dt><dd>{course.duration}</dd></div><div><dt>Dars vaqti</dt><dd>{course.schedule}</dd></div><div><dt>O‘qituvchi</dt><dd>{course.teacher}</dd></div></dl>
+            <div className="course-meta"><strong>{course.price}</strong><button type="button" onClick={() => chooseCourse(course.title)}>Kursga yozilish</button></div>
           </article>)}
         </div>
       </section>
@@ -135,9 +145,8 @@ export default function Home() {
       </section>
 
       <section className="section shell results" id="results">
-        <div className="quote-mark">“</div>
-        <blockquote>Bu yerda men shunchaki kod yozishni emas, <em>muammoni yechishni</em> o‘rgandim.</blockquote>
-        <div className="student"><div className="avatar">AS</div><span><strong>Azizbek S.</strong>Frontend kursi bitiruvchisi · Uzum</span></div>
+        <div className="section-head results-head"><div><span className="kicker">Bitiruvchilar</span><h2>Bilimdan —<br /><em>real natijaga.</em></h2></div><p>Quyidagi ma’lumotlar hozircha namuna sifatida joylandi. Haqiqiy bitiruvchilar ma’lumotlari tayyor bo‘lganda yangilanadi.</p></div>
+        <div className="result-grid">{studentResults.map((student) => <article className="result-card" key={student.name}><div className={`result-avatar ${student.color}`}>{student.initials}</div><span className="result-course">{student.course} bitiruvchisi</span><h3>{student.name}</h3><p>{student.result}</p><strong>{student.company}</strong><div className="result-actions"><span>Portfolio · tez orada</span><span>▶ Video fikr · tez orada</span></div></article>)}</div>
       </section>
 
       <section className="faq shell section">
@@ -152,7 +161,7 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="footer"><div className="shell footer-row"><div className="brand inverse"><span className="brand-mark">G</span><span>GOFUROV<br />ACADEMY</span></div><p>Bilimdan — natijaga.</p><span>© 2026</span></div></footer>
+      <footer className="footer"><div className="shell footer-row"><div className="brand inverse"><span className="brand-mark">G</span><span>GOFUROV<br />ACADEMY</span></div><p>Bilimdan — natijaga.</p><div className="social-links"><a href="https://t.me/gofurovacademy" target="_blank" rel="noreferrer">Telegram ↗</a><a href="https://instagram.com/gofurovacademy" target="_blank" rel="noreferrer">Instagram ↗</a></div><span>© 2026</span></div></footer>
     </main>
   );
 }
