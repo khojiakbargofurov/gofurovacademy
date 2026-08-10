@@ -13,9 +13,9 @@ function formatUzbekPhone(value: string) {
 }
 
 const courses = [
-  { n: "01", title: "Frontend", text: "HTML, CSS, JavaScript va React orqali zamonaviy interfeyslar yarating.", duration: "6 oy", schedule: "Du–Cho–Ju · 18:30", teacher: "Javohir Karimov", price: "890 000 so‘m/oy" },
-  { n: "02", title: "Python", text: "Dasturlash asoslaridan real backend loyihalarigacha bo‘lgan amaliy yo‘l.", duration: "7 oy", schedule: "Se–Pay–Sha · 19:00", teacher: "Sardor Aliyev", price: "950 000 so‘m/oy" },
-  { n: "03", title: "Grafik dizayn", text: "Vizual fikrlash, brending va portfolio uchun kuchli dizayn ko‘nikmalari.", duration: "5 oy", schedule: "Du–Cho–Ju · 15:00", teacher: "Madina Rasulova", price: "790 000 so‘m/oy" },
+  { n: "01", title: "Frontend", text: "HTML, CSS, JavaScript va React orqali zamonaviy interfeyslar yarating.", duration: "6 oy", schedule: "Du–Cho–Ju · 18:30", teacher: "Javohir Karimov", price: "890 000 so‘m/oy", tools: ["HTML & CSS", "JavaScript", "React", "Git"], program: ["Web asoslari va responsiv sahifalar", "JavaScript va brauzer API’lari", "React komponentlari va state", "Portfolio uchun yakuniy loyiha"] },
+  { n: "02", title: "Python", text: "Dasturlash asoslaridan real backend loyihalarigacha bo‘lgan amaliy yo‘l.", duration: "7 oy", schedule: "Se–Pay–Sha · 19:00", teacher: "Sardor Aliyev", price: "950 000 so‘m/oy", tools: ["Python", "Django", "PostgreSQL", "REST API"], program: ["Algoritmlar va Python asoslari", "Ma’lumotlar bazasi va SQL", "Django orqali backend yaratish", "REST API va serverga joylash"] },
+  { n: "03", title: "Grafik dizayn", text: "Vizual fikrlash, brending va portfolio uchun kuchli dizayn ko‘nikmalari.", duration: "5 oy", schedule: "Du–Cho–Ju · 15:00", teacher: "Madina Rasulova", price: "790 000 so‘m/oy", tools: ["Figma", "Photoshop", "Illustrator", "Branding"], program: ["Kompozitsiya, rang va tipografika", "Ijtimoiy tarmoq dizayni", "Logotip va brend identifikatsiyasi", "Portfolio va mijoz bilan ishlash"] },
 ];
 
 const studentResults = [
@@ -28,6 +28,8 @@ const faqs = [
   ["Boshlash uchun tajriba kerakmi?", "Yo‘q. Darslar noldan boshlanadi va bosqichma-bosqich murakkablashadi."],
   ["Darslar qaysi tilda?", "Darslar o‘zbek tilida, zarur texnik atamalar esa sodda izohlanadi."],
   ["Sertifikat beriladimi?", "Ha, kursni muvaffaqiyatli yakunlagan o‘quvchilar sertifikat va tayyor portfolio oladi."],
+  ["To‘lovni bo‘lib amalga oshirish mumkinmi?", "Ha, kurs to‘lovi har oy amalga oshiriladi. Bir necha oy uchun oldindan to‘lash ham mumkin."],
+  ["Guruhda nechta o‘quvchi bo‘ladi?", "Sifatli mentorlik uchun guruhlar odatda 12–16 nafar o‘quvchidan tashkil qilinadi."],
 ];
 
 export default function Home() {
@@ -38,6 +40,7 @@ export default function Home() {
   const [formError, setFormError] = useState("");
   const [phone, setPhone] = useState("");
   const [selectedCourse, setSelectedCourse] = useState("");
+  const [programCourse, setProgramCourse] = useState<(typeof courses)[number] | null>(null);
 
   function chooseCourse(course: string) {
     setSelectedCourse(course);
@@ -128,6 +131,7 @@ export default function Home() {
             <div className="course-icon" aria-hidden="true">{i === 0 ? "</>" : i === 1 ? "Py" : "✦"}</div>
             <h3>{course.title}</h3><p>{course.text}</p>
             <dl className="course-details"><div><dt>Davomiyligi</dt><dd>{course.duration}</dd></div><div><dt>Dars vaqti</dt><dd>{course.schedule}</dd></div><div><dt>O‘qituvchi</dt><dd>{course.teacher}</dd></div></dl>
+            <button className="program-button" type="button" onClick={() => setProgramCourse(course)}>Dastur bilan tanishish <span>→</span></button>
             <div className="course-meta"><strong>{course.price}</strong><button type="button" onClick={() => chooseCourse(course.title)}>Kursga yozilish</button></div>
           </article>)}
         </div>
@@ -162,6 +166,10 @@ export default function Home() {
       </section>
 
       <footer className="footer"><div className="shell footer-row"><div className="brand inverse"><span className="brand-mark">G</span><span>GOFUROV<br />ACADEMY</span></div><p>Bilimdan — natijaga.</p><div className="social-links"><a href="https://t.me/gofurovacademy" target="_blank" rel="noreferrer">Telegram ↗</a><a href="https://instagram.com/gofurovacademy" target="_blank" rel="noreferrer">Instagram ↗</a></div><span>© 2026</span></div></footer>
+
+      <a className="mobile-cta" href="#contact">Bepul maslahat olish <span>→</span></a>
+
+      {programCourse && <div className="modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && setProgramCourse(null)}><section className="program-modal" role="dialog" aria-modal="true" aria-labelledby="program-title"><button className="modal-close" type="button" onClick={() => setProgramCourse(null)} aria-label="Oynani yopish">×</button><span className="kicker">Kurs dasturi</span><h2 id="program-title">{programCourse.title}</h2><div className="tool-list">{programCourse.tools.map((tool) => <span key={tool}>{tool}</span>)}</div><ol>{programCourse.program.map((item, index) => <li key={item}><b>{String(index + 1).padStart(2, "0")}</b><span>{item}</span></li>)}</ol><button className="button primary" type="button" onClick={() => { setProgramCourse(null); chooseCourse(programCourse.title); }}>Kursga yozilish <span>→</span></button></section></div>}
     </main>
   );
 }
